@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Allocation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f1f1;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #fef6e4;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 60%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4b4b4b;
+            margin-bottom: 30px;
+        }
+
+        .note {
+            font-size: 1.2rem;
+            color: #D36D6D;
+            background-color: #ffe4e1;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .name-input {
+            padding: 12px;
+            font-size: 1.2rem;
+            margin: 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            width: 80%;
+        }
+
+        .shift-button {
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            color: white;
+            background-color: #9fc8c8;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 10px;
+        }
+
+        .shift-button:hover {
+            background-color: #7aa7a7;
+        }
+
+        .shift-button.taken {
+            background-color: #A3D8A5;
+            cursor: not-allowed;
+        }
+
+        .shift-area, .shift-display {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #e5f1f1;
+            display: none;
+        }
+
+        .flower-background {
+            background-image: url('https://via.placeholder.com/600x400/FFE4E1/000000?text=Flower+Background');
+            background-size: cover;
+            background-position: center;
+            padding: 50px;
+            border-radius: 10px;
+        }
+
+        .shift-text {
+            color: #7a7a7a;
+            font-size: 1.2rem;
+        }
+
+        .shift-list {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .shift-item {
+            background-color: #d3e4e4;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shift Allocation for Members</h1>
+
+        <!-- Remittance Dateline Note -->
+        <div class="note">
+            <p><strong>Reminder:</strong> The dateline for remitting the monthly remittance is the 6th of every month. Any further delay will incur a 10% penalty on the contribution, including savings.</p>
+        </div>
+
+        <div class="flower-background">
+            <label for="name">Please Enter Your Name:</label>
+            <input type="text" id="name" class="name-input" placeholder="Enter your name">
+            <button class="shift-button" onclick="checkName()">Submit</button>
+        </div>
+
+        <div id="shift-area" class="shift-area">
+            <h3>Select Your Shift:</h3>
+            <button id="shift1" class="shift-button" onclick="selectShift(1)">Shift 1</button>
+            <button id="shift2" class="shift-button" onclick="selectShift(2)">Shift 2</button>
+            <button id="shift3" class="shift-button" onclick="selectShift(3)">Shift 3</button>
+            <button id="shift4" class="shift-button" onclick="selectShift(4)">Shift 4</button>
+            <button id="shift5" class="shift-button" onclick="selectShift(5)">Shift 5</button>
+            <button id="shift6" class="shift-button" onclick="selectShift(6)">Shift 6</button>
+            <button id="shift7" class="shift-button" onclick="selectShift(7)">Shift 7</button>
+            <button id="shift8" class="shift-button" onclick="selectShift(8)">Shift 8</button>
+            <button id="shift9" class="shift-button" onclick="selectShift(9)">Shift 9</button>
+            <button id="shift10" class="shift-button" onclick="selectShift(10)">Shift 10</button>
+        </div>
+
+        <div id="shift-display" class="shift-display">
+            <h3>Allocated Shifts:</h3>
+            <div id="shift-list" class="shift-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const validNames = ['Tom', 'Amos', 'David', 'Danson', 'Joshua', 'Urany', 'Silus', 'Mevis', 'Bascoline', 'Kasoi'];
+        const shiftMappings = [4, 9, 1, 5, 7, 6, 10, 3, 8, 2]; // Randomized mapping of shifts
+        const selectedShifts = [];
+        let memberName = '';
+
+        function checkName() {
+            const name = document.getElementById("name").value;
+            if (validNames.includes(name)) {
+                memberName = name;
+                document.getElementById("shift-area").style.display = "block";
+                displaySelectedShifts(); // Show the updated list of shifts immediately
+                document.getElementById("shift-display").style.display = "block"; // Show the shift list
+            } else {
+                alert("Sorry, your name is not on the list.");
+            }
+        }
+
+        function selectShift(shiftNumber) {
+            // Map the selected shift to its randomized number
+            const realShift = shiftMappings[shiftNumber - 1];
+
+            // Check if the shift is already taken
+            if (selectedShifts.some(item => item.shift === realShift)) {
+                alert(`Shift ${realShift} has already been taken.`);
+                return;
+            }
+
+            // Add the selected shift with the member's name
+            selectedShifts.push({ shift: realShift, name: memberName });
+
+            // Mark the button as taken
+            const shiftButton = document.getElementById(`shift${shiftNumber}`);
+            shiftButton.classList.add("taken");
+            shiftButton.innerHTML = `Shift ${shiftNumber} ✓`; // Add checkmark to the button text
+
+            // Display the selected shifts for everyone to see
+            displaySelectedShifts();
+
+            // Hide the shift selection area and show the updated list
+            document.getElementById("shift-area").style.display = "none";
+            document.getElementById("shift-display").style.display = "block";
+        }
+
+        function displaySelectedShifts() {
+            const shiftList = document.getElementById("shift-list");
+            shiftList.innerHTML = ""; // Clear the previous list
+
+            // Loop through the selected shifts and display them
+            selectedShifts.forEach(item => {
+                const shiftItem = document.createElement("div");
+                shiftItem.className = "shift-item";
+                shiftItem.innerText = `${item.name} has selected Shift ${item.shift}`;
+                shiftList.appendChild(shiftItem);
+            });
+        }
+    </script>
+</body>
+</html>
